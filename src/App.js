@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
-import PostList from "./components/PostList";
-import PostForm from "./components/PostForm";
 
 function App() {
+	const [animals, setAnimals] = useState(["dog"]);
+	const [input, setInput] = useState("");
+
+	const addAnimal = (e) => {
+		e.preventDefault();
+		setAnimals([...animals, input]);
+		setInput("");
+	};
+
+	const handleSubmit = (e) => {
+		setInput(e.target.value);
+	};
 	return (
 		<div className="App">
-			<PostList />
-			<PostForm />
+			{animals && animals.map((a, i) => <li key={i}>{a}</li>)}
+			<form onSubmit={addAnimal}>
+				<input type="text" value={input} onChange={handleSubmit} />
+				<button type="submit">Add animal!</button>
+			</form>
 		</div>
 	);
 }
