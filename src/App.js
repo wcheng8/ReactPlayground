@@ -1,26 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
+import axios from "axios";
 
 function App() {
-	const [animals, setAnimals] = useState(["dog"]);
+	const [pokemondata, setPokemondata] = useState("");
 	const [input, setInput] = useState("");
+	const [pokemonapi, setPokemonapi] = useState("");
 
-	const addAnimal = (e) => {
-		e.preventDefault();
-		setAnimals([...animals, input]);
-		setInput("");
-	};
-
-	const handleSubmit = (e) => {
-		setInput(e.target.value);
-	};
+	useEffect(() => {
+		axios
+			.get(`https://pokeapi.co/api/v2/pokemon/${pokemonapi}`)
+			.then((res) => setPokemondata(res.data.sprites.front_default))
+			.catch((err) => console.log(err));
+	}, [pokemonapi]);
 	return (
 		<div className="App">
-			{animals && animals.map((a, i) => <li key={i}>{a}</li>)}
-			<form onSubmit={addAnimal}>
-				<input type="text" value={input} onChange={handleSubmit} />
-				<button type="submit">Add animal!</button>
-			</form>
+			<input
+				type="text"
+				value={input}
+				onChange={(e) => setInput(e.target.value)}
+			/>
+			<button onClick={() => setPokemonapi(input)}>Get Da Pokemon!</button>
+			<img src={pokemondata} alt="" />
 		</div>
 	);
 }
